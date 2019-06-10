@@ -1,20 +1,9 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1054]:
-
-
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 import seaborn as sns
 import scipy.stats as stats
 import datetime
-get_ipython().run_line_magic('matplotlib', 'inline')
-
-
-# In[1307]:
-
 
 #Read in files and put into dataframe
 file_1 = pd.read_csv(str(input('File_1 Name: ')), skiprows=12, encoding='latin1') #Chow Cohort- Ghrelin pt. 1.csv
@@ -38,10 +27,6 @@ file_1['Date Time'] = file_1['Date Time'].apply(pd.to_datetime)
 
 file_2 = file_2.apply(pd.to_numeric, errors='ignore')
 file_2['Date Time'] = file_2['Date Time'].apply(pd.to_datetime)
-
-
-# In[1308]:
-
 
 # Create new columns for date/hour/minute and then drop the earlier starting df rows until start hour is the same
 file_1['date'] = file_1['Date Time'].dt.date
@@ -86,17 +71,9 @@ if len(file_2) < len(file_1):
         time_matched_df = time_matched_df.reset_index(drop=True)
     file_1 = time_matched_df
 
-
-# In[1315]:
-
-
 #Make Date Time for both files the same and concat files into single dataframe
 file_2['Date Time'] = file_1['Date Time']
 df = pd.concat([file_1, file_2]).reset_index(drop=True)
-
-
-# In[1321]:
-
 
 #Create lists for Cre+ and WT animal numbers (or any two groups)
 group_1_list = input('Group_1 Animals (#, #, #...): ') #476, 481, 478, 487, 484, 491, 493
@@ -108,10 +85,6 @@ group_2_list = [int(s) for s in group_2_list.split(', ') if s.isdigit()]
 #Create genotype identifiers for each group
 group_1_genotype = input('Group_1 Genotype: ') #cre
 group_2_genotype = input('Group_1 Genotype: ') #WT
-
-
-# In[1322]:
-
 
 #Create dict of animal id's and genotye to map
 genotype_map_dict = dict(zip(group_1_list, [group_1_genotype for i in group_1_list]))
@@ -125,12 +98,7 @@ df = df.dropna().reset_index(drop=True)
 df = df.apply(pd.to_numeric, errors='ignore')
 df['Date Time'] = df['Date Time'].apply(pd.to_datetime)
 
-
-# In[ ]:
-
-
 #Drop unimportant columns and create .csv of combined, processed file
 df = df.drop(columns=['date', 'hour', 'minute'])
 combined_processed_file = str(input('Output File Name (*.csv): '))
 df.to_csv(path_or_buf=combined_processed_file)
-
